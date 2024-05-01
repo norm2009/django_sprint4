@@ -1,0 +1,15 @@
+from django import forms
+from django.contrib.auth import get_user_model
+
+from blog.models import Post
+
+User = get_user_model()
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'username']
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'text', 'location', 'category']
