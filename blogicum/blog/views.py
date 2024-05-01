@@ -42,13 +42,7 @@ def index(request):
     return render(request, template, context)
 
 
-def post_detail(request, id):
-    template = 'blog/detail.html'
-    posts = get_object_or_404(
-        posts_filter(id=id)
-    )
-    context = {'post': posts}
-    return render(request, template, context)
+
 
 
 def category_posts(request, category_slug):
@@ -72,6 +66,13 @@ def category_posts(request, category_slug):
                'post_list': paginator.get_page(page_number)}
     return render(request, template, context)
 
+def post_detail(request, id):
+    template = 'blog/detail.html'
+    posts = get_object_or_404(
+        posts_filter(id=id)
+    )
+    context = {'post': posts}
+    return render(request, template, context)
 
 class ProfileListView(ListView, LoginRequiredMixin):
     model = Post
@@ -81,12 +82,16 @@ class ProfileListView(ListView, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = get_object_or_404(User, username=self.kwargs['username'])
+        context['profile'] = get_object_or_404(User,
+                                               username=self.kwargs['username'])
         return context
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(author__username=self.kwargs['username'])
+        if self.request.user.username == self.kwargs['username']:
+            return qs.filter(author__username=self.kwargs['username'])
+        return qs.filter(author__username=self.kwargs['username'],
+                         pub_date__lt=datetime.now(tz=timezone.utc))
 
 
 class ProfileUpdateView(UpdateView):
@@ -95,7 +100,8 @@ class ProfileUpdateView(UpdateView):
     template_name = 'blog/user.html'
 
     def get_success_url(self):
-        return reverse('blog:profile', kwargs={'username': self.object.username})
+        return reverse('blog:profile',
+                       kwargs={'username': self.object.username})
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.request.user.pk)
@@ -106,9 +112,10 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     template_name = 'blog/create.html'
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.pub_date = datetime.now(tz=timezone.utc)
+        #form.instance.pub_date = datetime.now(tz=timezone.utc)
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('blog:profile', kwargs={'username': self.request.user.username})
+        return reverse('blog:profile',
+                       kwargs={'username': self.request.user.username})
 

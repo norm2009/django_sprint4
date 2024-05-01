@@ -69,6 +69,13 @@ class Post(PublishedModel, CreatedModel):
         null=True,
         blank=True
     )
+    image = models.ImageField(
+        verbose_name='Картинка',
+        upload_to='images',
+        #on_delete=models.SET_NULL,
+        #null=True,
+        blank=True
+    )
     category = models.ForeignKey(
         verbose_name='Категория',
         to=Category,
