@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse
 from django.shortcuts import redirect
@@ -63,7 +63,6 @@ def category_posts(request, category_slug):
     return render(request, template, context)
 
 
-
 class ProfileListView(ListView, LoginRequiredMixin):
     model = Post
     ordering = ['-pub_date']
@@ -72,8 +71,9 @@ class ProfileListView(ListView, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = get_object_or_404(User,
-                                               username=self.kwargs['username'])
+        context['profile'] = get_object_or_404(
+            User,
+            username=self.kwargs['username'])
         return context
 
     def get_queryset(self):
@@ -101,7 +101,6 @@ class CommentCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.post_id = self.kwargs['pk']
-        #form.instance.pub_date = datetime.now(tz=timezone.utc)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -110,8 +109,8 @@ class CommentCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['post']= get_object_or_404(Post, pk=self.kwargs['pk'])
-        context['comments']= Comment.objects.filter(post=self.kwargs['pk'])
+        context['post'] = get_object_or_404(Post, pk=self.kwargs['pk'])
+        context['comments'] = Comment.objects.filter(post=self.kwargs['pk'])
         return context
 
 
@@ -122,6 +121,7 @@ class CommentUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.kwargs['comment_id'])
+
     def get_success_url(self):
         return reverse('blog:post_detail',
                        kwargs={'pk': self.kwargs['pk']})
@@ -144,6 +144,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
