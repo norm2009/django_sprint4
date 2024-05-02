@@ -1,13 +1,11 @@
 from datetime import datetime, timezone
 
 from django.core.paginator import Paginator
-#from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.shortcuts import redirect
-
-from django.views.generic import DetailView, UpdateView, ListView, CreateView, DeleteView
+from django.views.generic import UpdateView, ListView, CreateView, DeleteView
 from django.contrib.auth import get_user_model
 
 from blog.forms import ProfileForm, PostForm, CommentForm
@@ -41,12 +39,6 @@ def index(request):
     page_number = request.GET.get('page')
     context = {'page_obj': paginator.get_page(page_number)}
     return render(request, template, context)
-
-def post_comment(request, post_id):
-    return redirect('blog:post_detail', post_id)
-
-
-
 
 
 def category_posts(request, category_slug):
@@ -91,6 +83,7 @@ class ProfileListView(ListView, LoginRequiredMixin):
         return qs.filter(author__username=self.kwargs['username'],
                          pub_date__lt=datetime.now(tz=timezone.utc))
 
+
 def post_detail(request, id):
     template = 'blog/detail.html'
     posts = get_object_or_404(
@@ -98,6 +91,7 @@ def post_detail(request, id):
     )
     context = {'post': posts}
     return render(request, template, context)
+
 
 class CommentCreateView(CreateView):
     model = Comment
@@ -116,9 +110,10 @@ class CommentCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['post']= get_object_or_404(Post,pk=self.kwargs['pk'])
+        context['post']= get_object_or_404(Post, pk=self.kwargs['pk'])
         context['comments']= Comment.objects.filter(post=self.kwargs['pk'])
         return context
+
 
 class CommentUpdateView(UpdateView):
     model = Comment
@@ -144,13 +139,13 @@ class ProfileUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.request.user.pk)
 
+
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
     def form_valid(self, form):
         form.instance.author = self.request.user
-        #form.instance.pub_date = datetime.now(tz=timezone.utc)
         return super().form_valid(form)
 
     def post(self, request, *args, **kwargs):
@@ -161,7 +156,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return reverse('blog:profile',
                        kwargs={'username': self.request.user.username})
 
-class PostUpdateView( UserPassesTestMixin, UpdateView):
+
+class PostUpdateView(UserPassesTestMixin, UpdateView):
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
@@ -177,6 +173,7 @@ class PostUpdateView( UserPassesTestMixin, UpdateView):
         return reverse('blog:post_detail',
                        kwargs={'pk': self.kwargs['pk']})
 
+
 class CommentDeleteView(DeleteView):
     model = Comment
     template_name = 'blog/comment.html'
@@ -184,6 +181,7 @@ class CommentDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('blog:profile',
                        kwargs={'username': self.request.user.username})
+
 
 class PostDeleteView(DeleteView):
     model = Post

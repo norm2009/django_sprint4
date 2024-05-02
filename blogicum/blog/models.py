@@ -4,7 +4,8 @@ from django.db import models
 from core.models import PublishedModel, CreatedModel
 import blog.constants as const
 
-User = get_user_model()#settings.AUTH_USER_MODEL
+
+User = get_user_model()
 
 
 class Category(PublishedModel, CreatedModel):
@@ -44,8 +45,6 @@ class Location(PublishedModel, CreatedModel):
         return self.name
 
 
-
-
 class Post(PublishedModel, CreatedModel):
     title = models.CharField(
         verbose_name='Заголовок',
@@ -74,8 +73,6 @@ class Post(PublishedModel, CreatedModel):
     image = models.ImageField(
         verbose_name='Картинка',
         upload_to='images',
-        #on_delete=models.SET_NULL,
-        #null=True,
         blank=True
     )
     category = models.ForeignKey(
@@ -92,6 +89,7 @@ class Post(PublishedModel, CreatedModel):
 
     def __str__(self):
         return self.title
+
 
 class Comment(CreatedModel):
     text = models.TextField(
@@ -116,5 +114,3 @@ class Comment(CreatedModel):
 
     def __str__(self):
         return str(self.id)
-
-

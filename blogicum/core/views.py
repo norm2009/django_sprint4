@@ -11,4 +11,3 @@ def page_not_found(request, exception):
 
 def e_handler500(request, *args, **kwargs):
     return render(request, 'pages/500.html', status=500)
-

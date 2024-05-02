@@ -37,4 +37,3 @@ urlpatterns = [
          views.ProfileListView.as_view(),
          name='profile'),
 ]
-
