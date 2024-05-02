@@ -44,6 +44,8 @@ class Location(PublishedModel, CreatedModel):
         return self.name
 
 
+
+
 class Post(PublishedModel, CreatedModel):
     title = models.CharField(
         verbose_name='Заголовок',
@@ -90,3 +92,29 @@ class Post(PublishedModel, CreatedModel):
 
     def __str__(self):
         return self.title
+
+class Comment(CreatedModel):
+    text = models.TextField(
+        verbose_name='Текст',
+    )
+
+    author = models.ForeignKey(
+        verbose_name='Автор комментария',
+        to=User,
+        on_delete=models.CASCADE,
+    )
+    post = models.ForeignKey(
+        verbose_name='Комментарий публикации',
+        to=Post,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'Коментарии'
+        ordering = ('-created_at',)
+
+    def __str__(self):
+        return str(self.id)
+
+
