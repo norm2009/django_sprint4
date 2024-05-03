@@ -80,9 +80,11 @@ class ProfileListView(ListView, LoginRequiredMixin):
     def get_queryset(self):
         qs = super().get_queryset()
         if self.request.user.username == self.kwargs['username']:
-            return qs.filter(author__username=self.kwargs['username']).annotate(comment_count=Count('comment'))
+            return qs.filter(author__username=self.kwargs['username']).\
+                annotate(comment_count=Count('comment'))
         return qs.filter(author__username=self.kwargs['username'],
-                         pub_date__lt=datetime.now(tz=timezone.utc)).annotate(comment_count=Count('comment'))
+                         pub_date__lt=datetime.now(tz=timezone.utc)).\
+            annotate(comment_count=Count('comment'))
 
 def post_detail(request, id):
     template = 'blog/detail.html'
