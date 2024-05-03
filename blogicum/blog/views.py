@@ -127,7 +127,7 @@ class CommentUpdateView(UpdateView):
                        kwargs={'pk': self.kwargs['pk']})
 
 
-class ProfileUpdateView(UpdateView):
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = ProfileForm
     template_name = 'blog/user.html'
