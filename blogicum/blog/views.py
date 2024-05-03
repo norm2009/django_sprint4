@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
 
-from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count
 from django.urls import reverse
@@ -21,6 +20,7 @@ class PostsListView(ListView):
     model = Post
     ordering = ['-pub_date']
     paginate_by = const.POSTS_AT_PAGE
+
 
 class IndexListView(PostsListView):
     template_name = 'blog/index.html'
@@ -48,6 +48,7 @@ class CategoryListView(PostsListView):
                          is_published=True,
                          category__slug=self.kwargs['category_slug']). \
             annotate(comment_count=Count('comment'))
+
 
 class ProfileListView(PostsListView, LoginRequiredMixin):
     template_name = 'blog/profile.html'
