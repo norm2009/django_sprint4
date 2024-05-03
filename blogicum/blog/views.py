@@ -90,7 +90,8 @@ class CommentCreateView(CreateView, LoginRequiredMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['post'] = get_object_or_404(Post, pk=self.kwargs['post_id'])
-        context['comments'] = Comment.objects.filter(post=self.kwargs['post_id'])
+        context['comments'] = Comment.objects.filter(
+            post=self.kwargs['post_id'])
         return context
 
 
