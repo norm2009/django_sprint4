@@ -14,7 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib.auth.forms import BaseUserCreationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 
 from django.contrib import admin
@@ -29,7 +29,7 @@ urlpatterns = [
     path('auth/registration/',
          CreateView.as_view(
              template_name='registration/registration_form.html',
-             form_class=BaseUserCreationForm,
+             form_class=UserCreationForm,
              success_url=reverse_lazy('pages:about'),
          ),
          name='registration'),
