@@ -86,6 +86,7 @@ class ProfileListView(ListView, LoginRequiredMixin):
                          pub_date__lt=datetime.now(tz=timezone.utc)).\
             annotate(comment_count=Count('comment'))
 
+
 def post_detail(request, id):
     template = 'blog/detail.html'
     posts = get_object_or_404(
