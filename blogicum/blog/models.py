@@ -91,7 +91,7 @@ class Post(PublishedModel, CreatedModel):
         return self.title
 
 
-class Comment(CreatedModel):
+class Comment(PublishedModel, CreatedModel):
     text = models.TextField(
         verbose_name='Текст',
     )
