@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Count
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.views.generic import UpdateView, ListView, CreateView, DeleteView
@@ -79,10 +80,9 @@ class ProfileListView(ListView, LoginRequiredMixin):
     def get_queryset(self):
         qs = super().get_queryset()
         if self.request.user.username == self.kwargs['username']:
-            return qs.filter(author__username=self.kwargs['username'])
+            return qs.filter(author__username=self.kwargs['username']).annotate(comment_count=Count('comment'))
         return qs.filter(author__username=self.kwargs['username'],
-                         pub_date__lt=datetime.now(tz=timezone.utc))
-
+                         pub_date__lt=datetime.now(tz=timezone.utc)).annotate(comment_count=Count('comment'))
 
 def post_detail(request, id):
     template = 'blog/detail.html'
