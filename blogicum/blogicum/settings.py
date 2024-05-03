@@ -80,6 +80,8 @@ TEMPLATES = [
     },
 ]
 
+TEMPLATES_DIR = BASE_DIR / 'templates'
+
 WSGI_APPLICATION = 'blogicum.wsgi.application'
 
 
@@ -136,7 +138,7 @@ STATIC_URL = 'static/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = 'sent_emails/'
+EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
