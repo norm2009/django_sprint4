@@ -149,10 +149,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-    def post(self, request, *args, **kwargs):
-        return reverse('blog:profile',
-                       kwargs={'username': self.request.user.username})
-
     def get_success_url(self):
         return reverse('blog:profile',
                        kwargs={'username': self.request.user.username})
