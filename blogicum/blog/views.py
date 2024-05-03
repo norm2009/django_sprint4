@@ -118,7 +118,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
                        kwargs={'username': self.object.username})
 
     def get_object(self, queryset=None):
-        return self.request.user
+        return get_object_or_404(self.model, pk=self.request.user.pk)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
