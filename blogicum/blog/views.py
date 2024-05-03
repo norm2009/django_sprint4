@@ -40,7 +40,8 @@ class CategoryListView(PostsListView):
         context = super().get_context_data(**kwargs)
         context['category'] = get_object_or_404(
             Category,
-            slug=self.kwargs['category_slug'])
+            slug=self.kwargs['category_slug'],
+            is_published=True)
         return context
 
     def get_queryset(self):
