@@ -117,7 +117,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('blog:profile',
                        kwargs={'username': self.object.username})
 
-    def get_object(self, queryset=None):
+    def get_object(self):
         return self.request.user
 
 
