@@ -73,27 +73,29 @@ class ProfileListView(PostsListView, LoginRequiredMixin):
 
 
 class CommentCreateView(CreateView, LoginRequiredMixin):
+
     model = Comment
     form_class = CommentForm
     template_name = 'blog/detail.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.post_id = self.kwargs['pk']
+        form.instance.post_id = self.kwargs['post_id']
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('blog:post_detail',
-                       kwargs={'pk': self.kwargs['pk']})
+                       kwargs={'post_id': self.kwargs['post_id']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['post'] = get_object_or_404(Post, pk=self.kwargs['pk'])
-        context['comments'] = Comment.objects.filter(post=self.kwargs['pk'])
+        context['post'] = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        context['comments'] = Comment.objects.filter(post=self.kwargs['post_id'])
         return context
 
 
 class CommentUpdateView(UpdateView):
+
     model = Comment
     form_class = CommentForm
     template_name = 'blog/comment.html'
@@ -105,7 +107,7 @@ class CommentUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('blog:post_detail',
-                       kwargs={'pk': self.kwargs['pk']})
+                       kwargs={'post_id': self.kwargs['post_id']})
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
@@ -122,7 +124,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
+
     form_class = PostForm
     template_name = 'blog/create.html'
 
@@ -136,6 +138,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 
 class PostUpdateView(UserPassesTestMixin, UpdateView):
+    pk_url_kwarg = 'post_id'
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
@@ -162,6 +165,7 @@ class CommentDeleteView(DeleteView):
 
 
 class PostDeleteView(DeleteView):
+    pk_url_kwarg = 'post_id'
     model = Post
     template_name = 'blog/create.html'
 
