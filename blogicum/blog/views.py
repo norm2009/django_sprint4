@@ -93,7 +93,7 @@ def post_detail(request, id):
     return render(request, template, context)
 
 
-class CommentCreateView(CreateView):
+class CommentCreateView(CreateView, LoginRequiredMixin):
     model = Comment
     form_class = CommentForm
     template_name = 'blog/detail.html'
