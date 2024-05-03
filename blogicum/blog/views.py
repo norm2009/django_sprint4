@@ -149,11 +149,11 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
         return object.author == self.request.user
 
     def handle_no_permission(self):
-        return redirect('blog:post_detail', pk=self.kwargs['pk'])
+        return redirect('blog:post_detail', post_id=self.kwargs['post_id'])
 
     def get_success_url(self):
         return reverse('blog:post_detail',
-                       kwargs={'pk': self.kwargs['pk']})
+                       kwargs={'post_id': self.kwargs['post_id']})
 
 
 class CommentDeleteView(DeleteView):
