@@ -117,8 +117,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'blog/user.html'
 
     def get_success_url(self):
-        return reverse('blog:profile',
-                       kwargs={'username': self.object.username})
+        return reverse('blog:index')
 
     def get_object(self):
         return self.request.user
