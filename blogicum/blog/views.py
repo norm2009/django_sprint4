@@ -28,7 +28,8 @@ class IndexListView(PostsListView):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.filter(pub_date__lt=datetime.now(tz=timezone.utc),
-                         is_published=True).\
+                         is_published=True,
+                         category__is_published=True).\
             annotate(comment_count=Count('comment'))
 
 
