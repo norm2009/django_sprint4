@@ -47,6 +47,7 @@ class CategoryListView(PostsListView):
         qs = super().get_queryset()
         return qs.filter(pub_date__lt=datetime.now(tz=timezone.utc),
                          is_published=True,
+                         category__is_published=True,
                          category__slug=self.kwargs['category_slug']). \
             annotate(comment_count=Count('comment'))
 
