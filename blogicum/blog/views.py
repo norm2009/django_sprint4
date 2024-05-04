@@ -156,7 +156,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
                             kwargs={'post_id': self.kwargs['post_id']})
 
 
-class CommentUpdateView(UpdateView):
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
 
     model = Comment
     form_class = CommentForm
@@ -184,18 +184,20 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self):
         return self.request.user
 
-    def get_success_url(self):
-        return reverse_lazy('blog:profile',
-                            kwargs={'username': self.request.user.username})
 
-
-class CommentDeleteView(DeleteView):
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
     template_name = 'blog/comment.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        comment = get_object_or_404(Comment, pk=self.kwargs['pk'])
+        if comment.author != self.request.user:
+            return redirect('blog:post_detail', post_id=self.kwargs['post_id'])
+        return super().dispatch(request, *args, **kwargs)
+
     def get_success_url(self):
-        return reverse_lazy('blog:profile',
-                            kwargs={'username': self.request.user.username})
+        return reverse_lazy('blog:post_detail',
+                            kwargs={'post_id': self.kwargs['post_id']})
 
 
 class PostDeleteView(UserPassesTestMixin, DeleteView):
