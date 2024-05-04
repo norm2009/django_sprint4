@@ -185,15 +185,16 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return self.request.user
 
 
-class CommentDeleteView(LoginRequiredMixin, DeleteView):
+class CommentDeleteView(UserPassesTestMixin, DeleteView):
     model = Comment
     template_name = 'blog/comment.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        comment = get_object_or_404(Comment, pk=self.kwargs['pk'])
-        if comment.author != self.request.user:
-            return redirect('blog:post_detail', post_id=self.kwargs['post_id'])
-        return super().dispatch(request, *args, **kwargs)
+    def test_func(self):
+        object = self.get_object()
+        return object.author == self.request.user
+
+    def handle_no_permission(self):
+        raise Http404
 
     def get_success_url(self):
         return reverse_lazy('blog:post_detail',
