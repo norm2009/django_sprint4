@@ -117,7 +117,8 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'blog/user.html'
 
     def get_success_url(self):
-        return reverse('blog:index')
+        return reverse('blog:profile',
+                       kwargs={'username': self.object.username})
 
     def get_object(self):
         return self.request.user
@@ -148,11 +149,11 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
         return object.author == self.request.user
 
     def handle_no_permission(self):
-        return redirect('blog:post_detail', post_id=self.kwargs['post_id'])
+        return redirect('blog:post_detail', pk=self.kwargs['pk'])
 
     def get_success_url(self):
         return reverse('blog:post_detail',
-                       kwargs={'post_id': self.kwargs['post_id']})
+                       kwargs={'pk': self.kwargs['pk']})
 
 
 class CommentDeleteView(DeleteView):
