@@ -55,8 +55,6 @@ class PostDetailView(UserPassesTestMixin, DetailView):
 
     def test_func(self):
         object = self.get_object()
-        print(object.author, self.request.user, (
-                not object.is_published or not object.category.is_published))
         if object.author != self.request.user and (
                 not object.is_published or not object.category.is_published):
             return False
@@ -81,7 +79,7 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('blog:post_detail',
-                       kwargs={'post_id': self.kwargs['post_id']})
+                            kwargs={'post_id': self.kwargs['post_id']})
 
 
 class IndexListView(PostsListView):
@@ -126,6 +124,7 @@ class ProfileListView(PostsListView):
             username=self.kwargs['username']
         )
         return context
+
     def get_queryset(self):
         qs = super().get_queryset()
         if self.request.user.username == self.kwargs['username']:
@@ -146,6 +145,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def dispatch(self, request, *args, **kwargs):
         self.post_object = get_object_or_404(Post, pk=kwargs['post_id'])
         return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.post = self.post_object
@@ -153,7 +153,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('blog:post_detail',
-                       kwargs={'post_id': self.kwargs['post_id']})
+                            kwargs={'post_id': self.kwargs['post_id']})
 
 
 class CommentUpdateView(UpdateView):
@@ -179,7 +179,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('blog:profile',
-                       kwargs={'username': self.object.username})
+                            kwargs={'username': self.object.username})
 
     def get_object(self):
         return self.request.user
