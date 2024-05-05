@@ -169,9 +169,9 @@ class CommentUpdateView(PostSuccessURLMixin, OnlyAuthorMixin, UpdateView):
 
 
 class ProfileUpdateView(
-    ProfileSuccessURLMixin,
-    LoginRequiredMixin,
-    UpdateView):
+        ProfileSuccessURLMixin,
+        LoginRequiredMixin,
+        UpdateView):
 
     model = User
     form_class = ProfileForm
@@ -195,7 +195,6 @@ class PostDeleteView(ProfileSuccessURLMixin, OnlyAuthorMixin, DeleteView):
     pk_url_kwarg = 'post_id'
     model = Post
     template_name = 'blog/create.html'
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
