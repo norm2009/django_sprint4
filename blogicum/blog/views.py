@@ -20,8 +20,10 @@ import blog.constants as const
 
 User = get_user_model()
 
+
 def annotate_comment_count(qs):
     return qs.annotate(comment_count=Count('comment')).order_by('-pub_date')
+
 
 def qs_filter_list_view(qs, **kwargs):
     return annotate_comment_count(qs.filter(
@@ -34,6 +36,7 @@ class OnlyAuthorMixin(UserPassesTestMixin):
     def test_func(self):
         object = self.get_object()
         return object.author == self.request.user
+
 
 class PostsListView(ListView):
     model = Post
@@ -71,8 +74,8 @@ class PostDetailView(UserPassesTestMixin, DetailView):
 
     def test_func(self):
         object = self.get_object()
-        return not(object.author != self.request.user) or (
-                object.is_published and object.category.is_published)
+        return (not (object.author != self.request.user)
+                or (object.is_published and object.category.is_published))
 
     def handle_no_permission(self):
         raise Http404
@@ -138,7 +141,7 @@ class ProfileListView(PostsListView):
         if self.request.user.username == self.kwargs['username']:
             return annotate_comment_count(
                 qs.filter(
-                author__username=self.kwargs['username']))
+                    author__username=self.kwargs['username']))
         return qs_filter_list_view(
             qs,
             category__is_published=True,
