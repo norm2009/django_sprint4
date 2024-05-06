@@ -22,7 +22,6 @@ class Category(PublishedModel, CreatedModel):
                   ' разрешены символы латиницы, цифры, дефис и подчёркивание.',
         unique=True,)
 
-
     class Meta:
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
