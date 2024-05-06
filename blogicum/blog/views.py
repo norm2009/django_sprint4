@@ -30,10 +30,11 @@ def annotate_comment_count(qs):
 
 
 def qs_filter_list_view(qs, **kwargs):
-    return annotate_comment_count(qs.filter(
-        **kwargs,
-        pub_date__lt=datetime.now(tz=timezone.utc),
-        is_published=True))
+    return annotate_comment_count(
+        qs.filter(
+            **kwargs,
+            pub_date__lt=datetime.now(tz=timezone.utc),
+            is_published=True))
 
 
 class PostsListView(ListView):

@@ -11,17 +11,17 @@ User = get_user_model()
 class Category(PublishedModel, CreatedModel):
     title = models.CharField(
         verbose_name='Заголовок',
-        max_length=const.CHAR_FIELD_LEN,
-    )
+        max_length=const.CHAR_FIELD_LEN,)
+
     description = models.TextField(
-        verbose_name='Описание',
-    )
+        verbose_name='Описание',)
+
     slug = models.SlugField(
         verbose_name='Идентификатор',
         help_text='Идентификатор страницы для URL;'
                   ' разрешены символы латиницы, цифры, дефис и подчёркивание.',
-        unique=True,
-    )
+        unique=True,)
+
 
     class Meta:
         verbose_name = 'категория'
@@ -34,8 +34,7 @@ class Category(PublishedModel, CreatedModel):
 class Location(PublishedModel, CreatedModel):
     name = models.CharField(
         verbose_name='Название места',
-        max_length=const.CHAR_FIELD_LEN,
-    )
+        max_length=const.CHAR_FIELD_LEN,)
 
     class Meta:
         verbose_name = 'местоположение'
@@ -48,39 +47,38 @@ class Location(PublishedModel, CreatedModel):
 class Post(PublishedModel, CreatedModel):
     title = models.CharField(
         verbose_name='Заголовок',
-        max_length=const.CHAR_FIELD_LEN,
-    )
+        max_length=const.CHAR_FIELD_LEN,)
+
     text = models.TextField(
-        verbose_name='Текст',
-    )
+        verbose_name='Текст',)
+
     pub_date = models.DateTimeField(
         verbose_name='Дата и время публикации',
         help_text='Если установить дату и время в будущем'
-                  ' — можно делать отложенные публикации.',
-    )
+                  ' — можно делать отложенные публикации.',)
+
     author = models.ForeignKey(
         verbose_name='Автор публикации',
         to=User,
-        on_delete=models.CASCADE,
-    )
+        on_delete=models.CASCADE,)
+
     location = models.ForeignKey(
         verbose_name='Местоположение',
         to=Location,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
-    )
+        blank=True)
+
     image = models.ImageField(
         verbose_name='Картинка',
         upload_to='images',
-        blank=True
-    )
+        blank=True)
+
     category = models.ForeignKey(
         verbose_name='Категория',
         to=Category,
         on_delete=models.SET_NULL,
-        null=True,
-    )
+        null=True,)
 
     class Meta:
         verbose_name = 'публикация'
@@ -93,19 +91,17 @@ class Post(PublishedModel, CreatedModel):
 
 class Comment(CreatedModel):
     text = models.TextField(
-        verbose_name='Текст',
-    )
+        verbose_name='Текст',)
 
     author = models.ForeignKey(
         verbose_name='Автор комментария',
         to=User,
-        on_delete=models.CASCADE,
-    )
+        on_delete=models.CASCADE,)
+
     post = models.ForeignKey(
         verbose_name='Комментарий публикации',
         to=Post,
-        on_delete=models.CASCADE,
-    )
+        on_delete=models.CASCADE,)
 
     class Meta:
         verbose_name = 'комментарий'
